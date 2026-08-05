@@ -141,6 +141,10 @@
     transform: none;
     box-shadow: none;
   }
+  .btn-random-bottom {
+    margin: 1.5rem auto 0;
+    display: block;
+  }
 
   /* ── Card ── */
   .card {
@@ -418,10 +422,6 @@
     <span class="badge">GAF2 · Phase 2</span>
   </div>
 
-  <button class="btn-random" id="btnRandom" onclick="pickRandom()">
-    🎲 Random Question
-  </button>
-
   <!-- Placeholder -->
   <div class="placeholder" id="placeholder">
     <div class="icon">🎯</div>
@@ -467,6 +467,11 @@
         </div>
       </div>
     </div>
+
+    <!-- Random button (below timers) -->
+    <button class="btn-random btn-random-bottom" id="btnRandom" onclick="pickRandom()">
+      🎲 Random Question
+    </button>
   </div>
 
   <div class="footer">
