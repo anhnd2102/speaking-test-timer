@@ -763,6 +763,28 @@ const questions = [
 ];
 
 // ═══════════════════════════════════════
+//  Tick Sound (Web Audio API — no external files)
+// ═══════════════════════════════════════
+let audioCtx = null;
+
+function playTick() {
+  try {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    // Short high-pitched tick: 800Hz, 60ms, quick decay
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(800, audioCtx.currentTime);
+    gain.gain.setValueAtTime(0.25, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.06);
+    osc.start(audioCtx.currentTime);
+    osc.stop(audioCtx.currentTime + 0.06);
+  } catch (_) { /* audio not available — silent fallback */ }
+}
+
+// ═══════════════════════════════════════
 //  State
 // ═══════════════════════════════════════
 let usedIndices = [];
@@ -901,8 +923,8 @@ function updatePrepDisplay() {
   prepTimerBox.classList.remove('active', 'warning', 'danger', 'done');
   if (prepRunning) {
     prepTimerBox.classList.add('active');
-    if (prepSecondsLeft <= 5) prepTimerBox.classList.add('danger');
-    else if (prepSecondsLeft <= 10) prepTimerBox.classList.add('warning');
+    if (prepSecondsLeft <= 5) { prepTimerBox.classList.add('danger'); playTick(); }
+    else if (prepSecondsLeft <= 10) { prepTimerBox.classList.add('warning'); playTick(); }
   }
 }
 
@@ -954,8 +976,8 @@ function updateAnswerDisplay() {
   answerTimerBox.classList.remove('active', 'warning', 'danger', 'done');
   if (answerRunning) {
     answerTimerBox.classList.add('active');
-    if (answerSecondsLeft <= 10) answerTimerBox.classList.add('danger');
-    else if (answerSecondsLeft <= 20) answerTimerBox.classList.add('warning');
+    if (answerSecondsLeft <= 10) { answerTimerBox.classList.add('danger'); playTick(); }
+    else if (answerSecondsLeft <= 20) { answerTimerBox.classList.add('warning'); playTick(); }
   }
 }
 
