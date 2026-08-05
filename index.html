@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Speaking Test — Random Question</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: #0f172a;
+    color: #e2e8f0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+  }
+
+  .container {
+    max-width: 750px;
+    width: 100%;
+  }
+
+  /* ── Header ── */
+  .header {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+  .header h1 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #f8fafc;
+    letter-spacing: -0.02em;
+  }
+  .header .subtitle {
+    font-size: 0.9rem;
+    color: #94a3b8;
+    margin-top: 0.25rem;
+  }
+
+  /* ── Button ── */
+  .btn-random {
+    display: block;
+    margin: 0 auto 2rem;
+    padding: 0.9rem 2.8rem;
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: #fff;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    border: none;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s, opacity 0.3s;
+    letter-spacing: 0.02em;
+  }
+  .btn-random:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(99, 102, 241, 0.35);
+  }
+  .btn-random:active { transform: translateY(0); }
+  .btn-random:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+
+  /* ── Card ── */
+  .card {
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 1rem;
+    padding: 2rem;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.35s ease, transform 0.35s ease;
+  }
+  .card.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .card .topic-badge {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #a5b4fc;
+    background: rgba(99, 102, 241, 0.15);
+    padding: 0.25rem 0.8rem;
+    border-radius: 999px;
+    margin-bottom: 0.75rem;
+  }
+
+  .card .question-number {
+    font-size: 0.85rem;
+    color: #64748b;
+    margin-bottom: 0.4rem;
+  }
+
+  .card .question {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: #f8fafc;
+    line-height: 1.4;
+    margin-bottom: 1.25rem;
+  }
+
+  .card .subtitle-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #64748b;
+    margin-bottom: 0.5rem;
+  }
+
+  .card .sub-questions {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .card .sub-questions li {
+    display: flex;
+    gap: 0.5rem;
+    font-size: 0.95rem;
+    color: #cbd5e1;
+    line-height: 1.45;
+  }
+  .card .sub-questions li .dot {
+    color: #818cf8;
+    flex-shrink: 0;
+  }
+
+  /* ── Timers ── */
+  .timers {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+    margin-top: 1.75rem;
+  }
+
+  .timer-box {
+    background: #0f172a;
+    border: 1px solid #334155;
+    border-radius: 0.75rem;
+    padding: 1rem 0.75rem;
+    text-align: center;
+    transition: border-color 0.3s;
+  }
+  .timer-box.active { border-color: #818cf8; }
+  .timer-box.done { border-color: #22c55e; }
+  .timer-box.warning { border-color: #f59e0b; }
+  .timer-box.danger { border-color: #ef4444; }
+
+  .timer-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #64748b;
+    margin-bottom: 0.35rem;
+  }
+
+  .timer-display {
+    font-size: 2.6rem;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+    color: #f8fafc;
+    letter-spacing: 0.02em;
+  }
+  .timer-box.done .timer-display { color: #22c55e; }
+  .timer-box.warning .timer-display { color: #f59e0b; }
+  .timer-box.danger .timer-display { color: #ef4444; }
+
+  .timer-status {
+    font-size: 0.8rem;
+    font-weight: 500;
+    margin-top: 0.25rem;
+  }
+  .timer-box.active .timer-status { color: #818cf8; }
+  .timer-box.done .timer-status { color: #22c55e; }
+  .timer-box.warning .timer-status { color: #f59e0b; }
+  .timer-box.danger .timer-status { color: #ef4444; }
+
+  .timer-controls {
+    display: flex;
+    gap: 0.4rem;
+    justify-content: center;
+    margin-top: 0.5rem;
+  }
+  .timer-controls button {
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 0.3rem 0.8rem;
+    border-radius: 999px;
+    border: 1px solid #475569;
+    background: transparent;
+    color: #cbd5e1;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .timer-controls button:hover { background: rgba(255,255,255,0.06); }
+  .timer-controls button.primary {
+    background: #6366f1;
+    border-color: #6366f1;
+    color: #fff;
+  }
+  .timer-controls button.primary:hover { background: #4f46e5; }
+
+  /* ── Placeholder ── */
+  .placeholder {
+    text-align: center;
+    color: #475569;
+    padding: 3rem 0;
+  }
+  .placeholder .icon { font-size: 3rem; margin-bottom: 0.75rem; }
+  .placeholder p { font-size: 1rem; }
+
+  /* ── Responsive ── */
+  @media (max-width: 500px) {
+    .timers { grid-template-columns: 1fr; }
+    .card { padding: 1.25rem; }
+    .card .question { font-size: 1.15rem; }
+    .timer-display { font-size: 2.2rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <h1>🎤 Speaking Test</h1>
+    <p class="subtitle">IELTS Foundation — Course 34</p>
+  </div>
+
+  <button class="btn-random" id="btnRandom" onclick="pickRandom()">
+    🎲 Random Question
+  </button>
+
+  <!-- Placeholder (shown before any question) -->
+  <div class="placeholder" id="placeholder">
+    <div class="icon">🎯</div>
+    <p>Click <strong>Random Question</strong> to start</p>
+  </div>
+
+  <!-- Question Card (hidden initially) -->
+  <div class="card" id="card">
+    <div class="topic-badge" id="topicBadge"></div>
+    <div class="question-number" id="questionNumber"></div>
+    <div class="question" id="question"></div>
+    <div class="subtitle-label">Gợi ý trả lời / Suggested talking points</div>
+    <ul class="sub-questions" id="subQuestions"></ul>
+
+    <!-- Timers -->
+    <div class="timers">
+      <div class="timer-box" id="prepTimer">
+        <div class="timer-label">⏱ Preparation</div>
+        <div class="timer-display" id="prepDisplay">00:30</div>
+        <div class="timer-status" id="prepStatus">READY</div>
+        <div class="timer-controls">
+          <button class="primary" id="prepStartBtn" onclick="startPrep()">Start</button>
+          <button id="prepResetBtn" onclick="resetPrep()">Reset</button>
+        </div>
+      </div>
+
+      <div class="timer-box" id="answerTimer">
+        <div class="timer-label">🎙 Answer</div>
+        <div class="timer-display" id="answerDisplay">01:00</div>
+        <div class="timer-status" id="answerStatus">READY</div>
+        <div class="timer-controls">
+          <button class="primary" id="answerStartBtn" onclick="startAnswer()">Start</button>
+          <button id="answerResetBtn" onclick="resetAnswer()">Reset</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════
+//  Question Bank
+// ═══════════════════════════════════════
+const questions = [
+  {
+    id: 1,
+    topic: "TOPIC 1: HEALTH & SICKNESS (Unit 1 — I Feel Awful)",
+    question: "How often do you get sick?",
+    subs: [
+      "Bạn có hay bị ốm không? Trước đây tần suất thế nào?",
+      "Lần gần nhất bạn bị ốm là khi nào? Bạn bị triệu chứng gì?",
+      "Khi bị ốm, bạn thường làm gì để hồi phục nhanh?",
+      "Bạn có nghĩ mình sẽ thay đổi thói quen để ít bị ốm hơn không?"
+    ]
+  },
+  {
+    id: 2,
+    topic: "TOPIC 1: HEALTH & SICKNESS (Unit 1 — I Feel Awful)",
+    question: "When was the last time you had a fever?",
+    subs: [
+      "Lần cuối bạn bị sốt là khi nào? Nhiệt độ bao nhiêu?",
+      "Bạn đã làm gì để hạ sốt? Có phải nghỉ học/đi làm không?",
+      "Trải nghiệm đó có khó chịu không? Bạn có lo lắng không?",
+      "Sau lần đó, bạn có cẩn thận hơn với sức khỏe của mình không?"
+    ]
+  },
+  {
+    id: 3,
+    topic: "TOPIC 1: HEALTH & SICKNESS (Unit 1 — I Feel Awful)",
+    question: "What do you usually do to stay healthy?",
+    subs: [
+      "Trước đây bạn có quan tâm đến sức khỏe không?",
+      "Hiện tại bạn có thói quen gì để giữ gìn sức khỏe? (ăn uống, tập luyện)",
+      "Những thói quen đó có hiệu quả không?",
+      "Trong tương lai bạn muốn thay đổi hay bổ sung thói quen gì?"
+    ]
+  },
+  {
+    id: 4,
+    topic: "TOPIC 1: HEALTH & SICKNESS (Unit 1 — I Feel Awful)",
+    question: "Do you prefer seeing the doctor or treating yourself at home?",
+    subs: [
+      "Trước đây khi bị ốm bạn thường làm gì?",
+      "Thời điểm gặp bác sĩ lần cuối là khi nào? Bạn gặp vấn đề gì?",
+      "Trải nghiệm đi khám bác sĩ của bạn thế nào? Bác sĩ đã làm gì cho bạn?",
+      "Bạn thích tự chữa ở nhà hay đến bác sĩ hơn? Tại sao?"
+    ]
+  },
+  {
+    id: 5,
+    topic: "TOPIC 1: HEALTH & SICKNESS (Unit 1 — I Feel Awful)",
+    question: "What are the common sicknesses among young people?",
+    subs: [
+      "Theo bạn, giới trẻ ngày nay hay mắc bệnh gì nhất?",
+      "Bạn hoặc bạn bè của bạn đã từng mắc những bệnh đó chưa?",
+      "Nguyên nhân chính khiến giới trẻ hay bị ốm là gì?",
+      "Bạn nghĩ cần làm gì để giảm tình trạng này trong tương lai?"
+    ]
+  },
+  {
+    id: 6,
+    topic: "TOPIC 2: SPORTS & INJURIES (Unit 2 — The Injury)",
+    question: "How often do you play sports?",
+    subs: [
+      "Tần suất chơi thể thao của bạn trước đây? Lý do?",
+      "Tần suất chơi thể thao của bạn hiện tại? Lý do?",
+      "Mong muốn của bạn trong tương lai? (môn thể thao mới, tần suất khác)",
+      "Bạn thích chơi thể thao một mình hay với bạn bè? Tại sao?"
+    ]
+  },
+  {
+    id: 7,
+    topic: "TOPIC 2: SPORTS & INJURIES (Unit 2 — The Injury)",
+    question: "What sports do you like to do in your free time?",
+    subs: [
+      "Hồi nhỏ bạn thích chơi môn thể thao nào?",
+      "Tại sao bạn thích môn đó? Kỷ niệm đáng nhớ nhất khi chơi môn đó là gì?",
+      "Hiện tại bạn có còn chơi môn đó không? Nếu không, tại sao?",
+      "Bạn có muốn thử một môn thể thao mới trong tương lai không? Môn gì?"
+    ]
+  },
+  {
+    id: 8,
+    topic: "TOPIC 2: SPORTS & INJURIES (Unit 2 — The Injury)",
+    question: "When was the last time you played sports?",
+    subs: [
+      "Thời điểm gần nhất bạn chơi thể thao? Đó là môn gì? Chơi với ai?",
+      "Bạn đã chơi ở đâu? Trải nghiệm đó thế nào?",
+      "Bạn có gặp chấn thương hay sự cố gì trong lúc chơi không?",
+      "Bạn có dự định chơi lại môn đó trong thời gian tới không?"
+    ]
+  },
+  {
+    id: 9,
+    topic: "TOPIC 2: SPORTS & INJURIES (Unit 2 — The Injury)",
+    question: "Have you ever had a sports injury?",
+    subs: [
+      "Bạn đã từng bị chấn thương khi chơi thể thao chưa?",
+      "Thời điểm gặp bác sĩ lần cuối vì chấn thương là khi nào? Bạn gặp vấn đề gì?",
+      "Trải nghiệm điều trị chấn thương của bạn thế nào? Bác sĩ đã làm gì cho bạn?",
+      "Bạn có thay đổi gì trong cách chơi thể thao sau chấn thương đó không?"
+    ]
+  },
+  {
+    id: 10,
+    topic: "TOPIC 2: SPORTS & INJURIES (Unit 2 — The Injury)",
+    question: "What don't you like about playing sports?",
+    subs: [
+      "Bạn có ghét điều gì khi chơi thể thao không?",
+      "Bạn đã từng có trải nghiệm tệ với thể thao chưa? Chuyện gì đã xảy ra?",
+      "Điều đó có làm bạn muốn ngừng chơi thể thao không?",
+      "Bạn nghĩ làm thế nào để tránh những điều không thích đó?"
+    ]
+  },
+  {
+    id: 11,
+    topic: "TOPIC 3: INTERNET & ONLINE COMMUNICATION (Unit 3 — Communicating Online)",
+    question: "What do you like most about using the Internet?",
+    subs: [
+      "Lần đầu tiên bạn sử dụng Internet là khi nào? Bạn dùng để làm gì?",
+      "Hiện tại, bạn dành bao nhiêu thời gian online mỗi ngày?",
+      "Bạn thích làm gì nhất khi online? (chơi game, mạng xã hội, học tập, mua sắm)",
+      "Có điều gì bạn không thích hoặc thấy phiền khi dùng Internet không?"
+    ]
+  },
+  {
+    id: 12,
+    topic: "TOPIC 3: INTERNET & ONLINE COMMUNICATION (Unit 3 — Communicating Online)",
+    question: "How do you usually communicate with your friends?",
+    subs: [
+      "Hồi nhỏ bạn giao tiếp với bạn bè như thế nào? (gặp trực tiếp, gọi điện?)",
+      "Hiện tại bạn thường dùng cách gì để nói chuyện với bạn bè? (nhắn tin, gọi video, gặp mặt?)",
+      "Tại sao bạn thích cách đó hơn?",
+      "Theo bạn, cách giao tiếp sẽ thay đổi thế nào trong tương lai?"
+    ]
+  },
+  {
+    id: 13,
+    topic: "TOPIC 3: INTERNET & ONLINE COMMUNICATION (Unit 3 — Communicating Online)",
+    question: "Is online communication popular in your country?",
+    subs: [
+      "Trước đây người Việt giao tiếp với nhau chủ yếu bằng cách gì?",
+      "Hiện tại, online communication có phổ biến ở Việt Nam không? Ví dụ?",
+      "Nhóm tuổi nào dùng online communication nhiều nhất?",
+      "Bạn nghĩ xu hướng này sẽ tiếp tục tăng hay giảm trong tương lai?"
+    ]
+  },
+  {
+    id: 14,
+    topic: "TOPIC 3: INTERNET & ONLINE COMMUNICATION (Unit 3 — Communicating Online)",
+    question: "Do you prefer talking face-to-face or chatting online?",
+    subs: [
+      "Trước đây bạn có hay gặp mặt trực tiếp bạn bè không?",
+      "Hiện tại bạn thấy gặp mặt trực tiếp hay nhắn tin online tiện hơn?",
+      "Trải nghiệm gặp mặt bạn bè gần nhất là khi nào? Bạn làm gì cùng nhau?",
+      "Bạn có nghĩ mình sẽ thay đổi thói quen giao tiếp trong tương lai không?"
+    ]
+  },
+  {
+    id: 15,
+    topic: "TOPIC 3: INTERNET & ONLINE COMMUNICATION (Unit 3 — Communicating Online)",
+    question: "Is the Internet a positive or negative development?",
+    subs: [
+      "Theo bạn, Internet đã thay đổi cuộc sống của bạn như thế nào?",
+      "Bạn có trải nghiệm tiêu cực nào với Internet không? (bị lừa đảo, nghiện mạng?)",
+      "Mặt tích cực lớn nhất và mặt tiêu cực lớn nhất của Internet là gì?",
+      "Bạn nghĩ làm thế nào để sử dụng Internet một cách khôn ngoan?"
+    ]
+  },
+  {
+    id: 16,
+    topic: "TOPIC 4: SCIENCE & EDUCATION (Unit 4 — Science for Girls)",
+    question: "Why do some people like science?",
+    subs: [
+      "Theo bạn, tại sao có những người rất thích khoa học?",
+      "Bạn có thích môn khoa học không? Từ khi nào?",
+      "Hồi nhỏ bạn có được tiếp xúc với khoa học không? Bằng cách nào?",
+      "Bạn nghĩ làm thế nào để khuyến khích trẻ em yêu thích khoa học hơn?"
+    ]
+  },
+  {
+    id: 17,
+    topic: "TOPIC 4: SCIENCE & EDUCATION (Unit 4 — Science for Girls)",
+    question: "When was the first time you learned a science subject?",
+    subs: [
+      "Môn khoa học đầu tiên bạn được học là môn gì? Học khi nào?",
+      "Bạn học môn đó ở đâu? Ai dạy bạn?",
+      "Trải nghiệm học môn đó như thế nào? (thích hay ghét? dễ hay khó?)",
+      "Bây giờ bạn có còn quan tâm đến môn đó không?"
+    ]
+  },
+  {
+    id: 18,
+    topic: "TOPIC 4: SCIENCE & EDUCATION (Unit 4 — Science for Girls)",
+    question: "Did you enjoy science at school?",
+    subs: [
+      "Ở trường, bạn có thích các môn khoa học (Toán, Lý, Hóa, Sinh) không?",
+      "Môn nào bạn thích nhất? Môn nào bạn ghét nhất? Tại sao?",
+      "Điểm số của bạn các môn khoa học có tốt không?",
+      "Nếu có thể quay lại, bạn có muốn học các môn khoa học khác đi không?"
+    ]
+  },
+  {
+    id: 19,
+    topic: "TOPIC 4: SCIENCE & EDUCATION (Unit 4 — Science for Girls)",
+    question: "Is learning science suitable for both boys and girls?",
+    subs: [
+      "Bạn có nghĩ con trai và con gái đều có thể học tốt khoa học không?",
+      "Trong lớp bạn ngày xưa, con trai hay con gái học khoa học tốt hơn?",
+      "Bạn có biết ai là nữ giới làm trong lĩnh vực khoa học không?",
+      "Bạn nghĩ có rào cản gì khiến ít bạn nữ theo đuổi khoa học không?"
+    ]
+  },
+  {
+    id: 20,
+    topic: "TOPIC 4: SCIENCE & EDUCATION (Unit 4 — Science for Girls)",
+    question: "What science subject would you like to learn more about?",
+    subs: [
+      "Có môn khoa học nào bạn muốn tìm hiểu thêm không?",
+      "Tại sao bạn chọn môn đó?",
+      "Bạn đã từng thử tự học môn đó chưa? Trải nghiệm thế nào?",
+      "Bạn có dự định học môn đó một cách nghiêm túc trong tương lai không?"
+    ]
+  }
+];
+
+// ═══════════════════════════════════════
+//  State
+// ═══════════════════════════════════════
+let usedIndices = [];
+let currentQuestion = null;
+
+// Timer state
+const PREP_SECONDS = 30;
+const ANSWER_SECONDS = 60;
+
+let prepInterval = null;
+let prepSecondsLeft = PREP_SECONDS;
+let prepRunning = false;
+
+let answerInterval = null;
+let answerSecondsLeft = ANSWER_SECONDS;
+let answerRunning = false;
+
+// ═══════════════════════════════════════
+//  DOM refs
+// ═══════════════════════════════════════
+const card        = document.getElementById('card');
+const placeholder = document.getElementById('placeholder');
+const btnRandom   = document.getElementById('btnRandom');
+
+const topicBadge    = document.getElementById('topicBadge');
+const questionNumber = document.getElementById('questionNumber');
+const questionEl    = document.getElementById('question');
+const subQuestions  = document.getElementById('subQuestions');
+
+const prepTimerBox  = document.getElementById('prepTimer');
+const prepDisplay   = document.getElementById('prepDisplay');
+const prepStatus    = document.getElementById('prepStatus');
+const prepStartBtn  = document.getElementById('prepStartBtn');
+const prepResetBtn  = document.getElementById('prepResetBtn');
+
+const answerTimerBox = document.getElementById('answerTimer');
+const answerDisplay  = document.getElementById('answerDisplay');
+const answerStatus   = document.getElementById('answerStatus');
+const answerStartBtn = document.getElementById('answerStartBtn');
+const answerResetBtn = document.getElementById('answerResetBtn');
+
+// ═══════════════════════════════════════
+//  Pick Random Question
+// ═══════════════════════════════════════
+function pickRandom() {
+  // Stop any running timers
+  stopPrep();
+  stopAnswer();
+  resetPrep();
+  resetAnswer();
+
+  // Reset usedIndices if all questions have been shown
+  if (usedIndices.length >= questions.length) {
+    usedIndices = [];
+  }
+
+  // Build available pool
+  const available = [];
+  for (let i = 0; i < questions.length; i++) {
+    if (!usedIndices.includes(i)) available.push(i);
+  }
+
+  const idx = available[Math.floor(Math.random() * available.length)];
+  usedIndices.push(idx);
+  currentQuestion = questions[idx];
+
+  // Render
+  topicBadge.textContent = currentQuestion.topic;
+  questionNumber.textContent = `Question #${currentQuestion.id} of 20`;
+  questionEl.textContent = currentQuestion.question;
+
+  subQuestions.innerHTML = '';
+  currentQuestion.subs.forEach(s => {
+    const li = document.createElement('li');
+    li.innerHTML = `<span class="dot">▸</span><span>${s}</span>`;
+    subQuestions.appendChild(li);
+  });
+
+  // Show card, hide placeholder
+  placeholder.style.display = 'none';
+  card.classList.add('visible');
+
+  // Show timers but reset their state
+  prepTimerBox.className = 'timer-box';
+  answerTimerBox.className = 'timer-box';
+}
+
+// ═══════════════════════════════════════
+//  Preparation Timer
+// ═══════════════════════════════════════
+function startPrep() {
+  if (prepRunning) return;
+  // Stop answer timer if running
+  if (answerRunning) stopAnswer();
+
+  prepRunning = true;
+  prepStartBtn.textContent = '⏸ Pause';
+  prepStartBtn.classList.remove('primary');
+  prepStatus.textContent = 'PREPARING...';
+
+  prepInterval = setInterval(() => {
+    prepSecondsLeft--;
+    updatePrepDisplay();
+
+    if (prepSecondsLeft <= 0) {
+      stopPrep();
+      prepStatus.textContent = 'TIME\'S UP!';
+      prepTimerBox.className = 'timer-box done';
+      // Auto-start answer timer
+      startAnswer();
+    }
+  }, 1000);
+}
+
+function stopPrep() {
+  if (prepInterval) clearInterval(prepInterval);
+  prepInterval = null;
+  prepRunning = false;
+  prepStartBtn.textContent = 'Start';
+  prepStartBtn.classList.add('primary');
+}
+
+function resetPrep() {
+  stopPrep();
+  prepSecondsLeft = PREP_SECONDS;
+  updatePrepDisplay();
+  prepStatus.textContent = 'READY';
+  prepTimerBox.className = 'timer-box';
+}
+
+function updatePrepDisplay() {
+  const m = Math.floor(Math.max(0, prepSecondsLeft) / 60);
+  const s = Math.max(0, prepSecondsLeft) % 60;
+  prepDisplay.textContent = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+
+  prepTimerBox.classList.remove('active', 'warning', 'danger', 'done');
+  if (prepRunning) {
+    prepTimerBox.classList.add('active');
+    if (prepSecondsLeft <= 5) prepTimerBox.classList.add('danger');
+    else if (prepSecondsLeft <= 10) prepTimerBox.classList.add('warning');
+  }
+}
+
+// ═══════════════════════════════════════
+//  Answer Timer
+// ═══════════════════════════════════════
+function startAnswer() {
+  if (answerRunning) return;
+  // Stop prep timer if running
+  if (prepRunning) stopPrep();
+
+  answerRunning = true;
+  answerStartBtn.textContent = '⏸ Pause';
+  answerStartBtn.classList.remove('primary');
+  answerStatus.textContent = 'ANSWERING...';
+
+  answerInterval = setInterval(() => {
+    answerSecondsLeft--;
+    updateAnswerDisplay();
+
+    if (answerSecondsLeft <= 0) {
+      stopAnswer();
+      answerStatus.textContent = 'TIME\'S UP!';
+      answerTimerBox.className = 'timer-box done';
+    }
+  }, 1000);
+}
+
+function stopAnswer() {
+  if (answerInterval) clearInterval(answerInterval);
+  answerInterval = null;
+  answerRunning = false;
+  answerStartBtn.textContent = 'Start';
+  answerStartBtn.classList.add('primary');
+}
+
+function resetAnswer() {
+  stopAnswer();
+  answerSecondsLeft = ANSWER_SECONDS;
+  updateAnswerDisplay();
+  answerStatus.textContent = 'READY';
+  answerTimerBox.className = 'timer-box';
+}
+
+function updateAnswerDisplay() {
+  const m = Math.floor(Math.max(0, answerSecondsLeft) / 60);
+  const s = Math.max(0, answerSecondsLeft) % 60;
+  answerDisplay.textContent = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+
+  answerTimerBox.classList.remove('active', 'warning', 'danger', 'done');
+  if (answerRunning) {
+    answerTimerBox.classList.add('active');
+    if (answerSecondsLeft <= 10) answerTimerBox.classList.add('danger');
+    else if (answerSecondsLeft <= 20) answerTimerBox.classList.add('warning');
+  }
+}
+
+// ═══════════════════════════════════════
+//  Keyboard shortcuts
+// ═══════════════════════════════════════
+document.addEventListener('keydown', (e) => {
+  if (e.key === ' ' || e.code === 'Space') {
+    e.preventDefault();
+    // Space toggles prep timer
+    if (prepRunning) {
+      stopPrep();
+      prepStatus.textContent = 'PAUSED';
+    } else if (!answerRunning) {
+      startPrep();
+    }
+  }
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    // Enter toggles answer timer
+    if (answerRunning) {
+      stopAnswer();
+      answerStatus.textContent = 'PAUSED';
+    } else {
+      startAnswer();
+    }
+  }
+  if (e.key === 'r' || e.key === 'R') {
+    e.preventDefault();
+    pickRandom();
+  }
+});
+</script>
+
+</body>
+</html>
