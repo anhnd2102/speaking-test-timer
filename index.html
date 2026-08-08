@@ -110,6 +110,36 @@
     margin-top: 0.5rem;
   }
 
+  /* ── Test Tabs ── */
+  .test-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-bottom: 1.75rem;
+  }
+  .test-tab {
+    padding: 0.5rem 1.5rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    background: var(--white);
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    letter-spacing: 0.01em;
+  }
+  .test-tab:hover {
+    border-color: var(--text-muted);
+    color: var(--text);
+  }
+  .test-tab.active {
+    color: #fff;
+    background: var(--red);
+    border-color: var(--red);
+    box-shadow: 0 2px 8px var(--red-glow);
+  }
+
   /* ── Main CTA Button ── */
   .btn-random {
     display: block;
@@ -422,6 +452,12 @@
     <span class="badge">GAF2 · Phase 2</span>
   </div>
 
+  <!-- Test Selector Tabs -->
+  <div class="test-tabs" id="testTabs">
+    <button class="test-tab active" data-test="test1" onclick="switchTest('test1')">Test 1 · Units 1–4</button>
+    <button class="test-tab" data-test="test2" onclick="switchTest('test2')">Test 2 · Units 5–8</button>
+  </div>
+
   <!-- Placeholder -->
   <div class="placeholder" id="placeholder">
     <div class="icon">🎯</div>
@@ -482,290 +518,436 @@
 
 <script>
 // ═══════════════════════════════════════
-//  Question Bank
+//  Question Banks
 // ═══════════════════════════════════════
-const questions = [
-  {
-    id: 1,
-    topic: "Health & Sickness",
-    topicShort: "HEALTH",
-    category: "health",
-    icon: "🏥",
-    question: "How often do you get sick?",
-    subs: [
-      "Bạn có hay bị ốm không? Trước đây tần suất thế nào?",
-      "Lần gần nhất bạn bị ốm là khi nào? Bạn bị triệu chứng gì?",
-      "Khi bị ốm, bạn thường làm gì để hồi phục nhanh?",
-      "Bạn có nghĩ mình sẽ thay đổi thói quen để ít bị ốm hơn không?"
-    ]
-  },
-  {
-    id: 2,
-    topic: "Health & Sickness",
-    topicShort: "HEALTH",
-    category: "health",
-    icon: "🌡️",
-    question: "When was the last time you had a fever?",
-    subs: [
-      "Lần cuối bạn bị sốt là khi nào? Nhiệt độ bao nhiêu?",
-      "Bạn đã làm gì để hạ sốt? Có phải nghỉ học/đi làm không?",
-      "Trải nghiệm đó có khó chịu không? Bạn có lo lắng không?",
-      "Sau lần đó, bạn có cẩn thận hơn với sức khỏe của mình không?"
-    ]
-  },
-  {
-    id: 3,
-    topic: "Health & Sickness",
-    topicShort: "HEALTH",
-    category: "health",
-    icon: "💪",
-    question: "What do you usually do to stay healthy?",
-    subs: [
-      "Trước đây bạn có quan tâm đến sức khỏe không?",
-      "Hiện tại bạn có thói quen gì để giữ gìn sức khỏe? (ăn uống, tập luyện)",
-      "Những thói quen đó có hiệu quả không?",
-      "Trong tương lai bạn muốn thay đổi hay bổ sung thói quen gì?"
-    ]
-  },
-  {
-    id: 4,
-    topic: "Health & Sickness",
-    topicShort: "HEALTH",
-    category: "health",
-    icon: "🩺",
-    question: "Do you prefer seeing the doctor or treating yourself at home?",
-    subs: [
-      "Trước đây khi bị ốm bạn thường làm gì?",
-      "Thời điểm gặp bác sĩ lần cuối là khi nào? Bạn gặp vấn đề gì?",
-      "Trải nghiệm đi khám bác sĩ của bạn thế nào? Bác sĩ đã làm gì cho bạn?",
-      "Bạn thích tự chữa ở nhà hay đến bác sĩ hơn? Tại sao?"
-    ]
-  },
-  {
-    id: 5,
-    topic: "Health & Sickness",
-    topicShort: "HEALTH",
-    category: "health",
-    icon: "🦠",
-    question: "What are the common sicknesses among young people?",
-    subs: [
-      "Theo bạn, giới trẻ ngày nay hay mắc bệnh gì nhất?",
-      "Bạn hoặc bạn bè của bạn đã từng mắc những bệnh đó chưa?",
-      "Nguyên nhân chính khiến giới trẻ hay bị ốm là gì?",
-      "Bạn nghĩ cần làm gì để giảm tình trạng này trong tương lai?"
-    ]
-  },
-  {
-    id: 6,
-    topic: "Sports & Injuries",
-    topicShort: "SPORTS",
-    category: "sports",
-    icon: "⚽",
-    question: "How often do you play sports?",
-    subs: [
-      "Tần suất chơi thể thao của bạn trước đây? Lý do?",
-      "Tần suất chơi thể thao của bạn hiện tại? Lý do?",
-      "Mong muốn của bạn trong tương lai? (môn thể thao mới, tần suất khác)",
-      "Bạn thích chơi thể thao một mình hay với bạn bè? Tại sao?"
-    ]
-  },
-  {
-    id: 7,
-    topic: "Sports & Injuries",
-    topicShort: "SPORTS",
-    category: "sports",
-    icon: "🎾",
-    question: "What sports do you like to do in your free time?",
-    subs: [
-      "Hồi nhỏ bạn thích chơi môn thể thao nào?",
-      "Tại sao bạn thích môn đó? Kỷ niệm đáng nhớ nhất khi chơi môn đó là gì?",
-      "Hiện tại bạn có còn chơi môn đó không? Nếu không, tại sao?",
-      "Bạn có muốn thử một môn thể thao mới trong tương lai không? Môn gì?"
-    ]
-  },
-  {
-    id: 8,
-    topic: "Sports & Injuries",
-    topicShort: "SPORTS",
-    category: "sports",
-    icon: "🏟️",
-    question: "When was the last time you played sports?",
-    subs: [
-      "Thời điểm gần nhất bạn chơi thể thao? Đó là môn gì? Chơi với ai?",
-      "Bạn đã chơi ở đâu? Trải nghiệm đó thế nào?",
-      "Bạn có gặp chấn thương hay sự cố gì trong lúc chơi không?",
-      "Bạn có dự định chơi lại môn đó trong thời gian tới không?"
-    ]
-  },
-  {
-    id: 9,
-    topic: "Sports & Injuries",
-    topicShort: "SPORTS",
-    category: "sports",
-    icon: "🤕",
-    question: "Have you ever had a sports injury?",
-    subs: [
-      "Bạn đã từng bị chấn thương khi chơi thể thao chưa?",
-      "Thời điểm gặp bác sĩ lần cuối vì chấn thương là khi nào? Bạn gặp vấn đề gì?",
-      "Trải nghiệm điều trị chấn thương của bạn thế nào? Bác sĩ đã làm gì cho bạn?",
-      "Bạn có thay đổi gì trong cách chơi thể thao sau chấn thương đó không?"
-    ]
-  },
-  {
-    id: 10,
-    topic: "Sports & Injuries",
-    topicShort: "SPORTS",
-    category: "sports",
-    icon: "😤",
-    question: "What don't you like about playing sports?",
-    subs: [
-      "Bạn có ghét điều gì khi chơi thể thao không?",
-      "Bạn đã từng có trải nghiệm tệ với thể thao chưa? Chuyện gì đã xảy ra?",
-      "Điều đó có làm bạn muốn ngừng chơi thể thao không?",
-      "Bạn nghĩ làm thế nào để tránh những điều không thích đó?"
-    ]
-  },
-  {
-    id: 11,
-    topic: "Internet & Online Communication",
-    topicShort: "INTERNET",
-    category: "internet",
-    icon: "🌐",
-    question: "What do you like most about using the Internet?",
-    subs: [
-      "Lần đầu tiên bạn sử dụng Internet là khi nào? Bạn dùng để làm gì?",
-      "Hiện tại, bạn dành bao nhiêu thời gian online mỗi ngày?",
-      "Bạn thích làm gì nhất khi online? (chơi game, mạng xã hội, học tập, mua sắm)",
-      "Có điều gì bạn không thích hoặc thấy phiền khi dùng Internet không?"
-    ]
-  },
-  {
-    id: 12,
-    topic: "Internet & Online Communication",
-    topicShort: "INTERNET",
-    category: "internet",
-    icon: "💬",
-    question: "How do you usually communicate with your friends?",
-    subs: [
-      "Hồi nhỏ bạn giao tiếp với bạn bè như thế nào? (gặp trực tiếp, gọi điện?)",
-      "Hiện tại bạn thường dùng cách gì để nói chuyện với bạn bè? (nhắn tin, gọi video, gặp mặt?)",
-      "Tại sao bạn thích cách đó hơn?",
-      "Theo bạn, cách giao tiếp sẽ thay đổi thế nào trong tương lai?"
-    ]
-  },
-  {
-    id: 13,
-    topic: "Internet & Online Communication",
-    topicShort: "INTERNET",
-    category: "internet",
-    icon: "🇻🇳",
-    question: "Is online communication popular in your country?",
-    subs: [
-      "Trước đây người Việt giao tiếp với nhau chủ yếu bằng cách gì?",
-      "Hiện tại, online communication có phổ biến ở Việt Nam không? Ví dụ?",
-      "Nhóm tuổi nào dùng online communication nhiều nhất?",
-      "Bạn nghĩ xu hướng này sẽ tiếp tục tăng hay giảm trong tương lai?"
-    ]
-  },
-  {
-    id: 14,
-    topic: "Internet & Online Communication",
-    topicShort: "INTERNET",
-    category: "internet",
-    icon: "🤝",
-    question: "Do you prefer talking face-to-face or chatting online?",
-    subs: [
-      "Trước đây bạn có hay gặp mặt trực tiếp bạn bè không?",
-      "Hiện tại bạn thấy gặp mặt trực tiếp hay nhắn tin online tiện hơn?",
-      "Trải nghiệm gặp mặt bạn bè gần nhất là khi nào? Bạn làm gì cùng nhau?",
-      "Bạn có nghĩ mình sẽ thay đổi thói quen giao tiếp trong tương lai không?"
-    ]
-  },
-  {
-    id: 15,
-    topic: "Internet & Online Communication",
-    topicShort: "INTERNET",
-    category: "internet",
-    icon: "⚖️",
-    question: "Is the Internet a positive or negative development?",
-    subs: [
-      "Theo bạn, Internet đã thay đổi cuộc sống của bạn như thế nào?",
-      "Bạn có trải nghiệm tiêu cực nào với Internet không? (bị lừa đảo, nghiện mạng?)",
-      "Mặt tích cực lớn nhất và mặt tiêu cực lớn nhất của Internet là gì?",
-      "Bạn nghĩ làm thế nào để sử dụng Internet một cách khôn ngoan?"
-    ]
-  },
-  {
-    id: 16,
-    topic: "Science & Education",
-    topicShort: "SCIENCE",
-    category: "science",
-    icon: "🔬",
-    question: "Why do some people like science?",
-    subs: [
-      "Theo bạn, tại sao có những người rất thích khoa học?",
-      "Bạn có thích môn khoa học không? Từ khi nào?",
-      "Hồi nhỏ bạn có được tiếp xúc với khoa học không? Bằng cách nào?",
-      "Bạn nghĩ làm thế nào để khuyến khích trẻ em yêu thích khoa học hơn?"
-    ]
-  },
-  {
-    id: 17,
-    topic: "Science & Education",
-    topicShort: "SCIENCE",
-    category: "science",
-    icon: "📐",
-    question: "When was the first time you learned a science subject?",
-    subs: [
-      "Môn khoa học đầu tiên bạn được học là môn gì? Học khi nào?",
-      "Bạn học môn đó ở đâu? Ai dạy bạn?",
-      "Trải nghiệm học môn đó như thế nào? (thích hay ghét? dễ hay khó?)",
-      "Bây giờ bạn có còn quan tâm đến môn đó không?"
-    ]
-  },
-  {
-    id: 18,
-    topic: "Science & Education",
-    topicShort: "SCIENCE",
-    category: "science",
-    icon: "🏫",
-    question: "Did you enjoy science at school?",
-    subs: [
-      "Ở trường, bạn có thích các môn khoa học (Toán, Lý, Hóa, Sinh) không?",
-      "Môn nào bạn thích nhất? Môn nào bạn ghét nhất? Tại sao?",
-      "Điểm số của bạn các môn khoa học có tốt không?",
-      "Nếu có thể quay lại, bạn có muốn học các môn khoa học khác đi không?"
-    ]
-  },
-  {
-    id: 19,
-    topic: "Science & Education",
-    topicShort: "SCIENCE",
-    category: "science",
-    icon: "👩‍🔬",
-    question: "Is learning science suitable for both boys and girls?",
-    subs: [
-      "Bạn có nghĩ con trai và con gái đều có thể học tốt khoa học không?",
-      "Trong lớp bạn ngày xưa, con trai hay con gái học khoa học tốt hơn?",
-      "Bạn có biết ai là nữ giới làm trong lĩnh vực khoa học không?",
-      "Bạn nghĩ có rào cản gì khiến ít bạn nữ theo đuổi khoa học không?"
-    ]
-  },
-  {
-    id: 20,
-    topic: "Science & Education",
-    topicShort: "SCIENCE",
-    category: "science",
-    icon: "📚",
-    question: "What science subject would you like to learn more about?",
-    subs: [
-      "Có môn khoa học nào bạn muốn tìm hiểu thêm không?",
-      "Tại sao bạn chọn môn đó?",
-      "Bạn đã từng thử tự học môn đó chưa? Trải nghiệm thế nào?",
-      "Bạn có dự định học môn đó một cách nghiêm túc trong tương lai không?"
-    ]
-  }
-];
+const questionBanks = {
+  test1: [
+    {
+      id: 1,
+      topic: "Health & Sickness",
+      topicShort: "HEALTH",
+      category: "health",
+      icon: "🏥",
+      question: "How often do you get sick?",
+      subs: [
+        "Bạn có hay bị ốm không? Trước đây tần suất thế nào?",
+        "Lần gần nhất bạn bị ốm là khi nào? Bạn bị triệu chứng gì?",
+        "Khi bị ốm, bạn thường làm gì để hồi phục nhanh?",
+        "Bạn có nghĩ mình sẽ thay đổi thói quen để ít bị ốm hơn không?"
+      ]
+    },
+    {
+      id: 2,
+      topic: "Health & Sickness",
+      topicShort: "HEALTH",
+      category: "health",
+      icon: "🌡️",
+      question: "When was the last time you had a fever?",
+      subs: [
+        "Lần cuối bạn bị sốt là khi nào? Nhiệt độ bao nhiêu?",
+        "Bạn đã làm gì để hạ sốt? Có phải nghỉ học/đi làm không?",
+        "Trải nghiệm đó có khó chịu không? Bạn có lo lắng không?",
+        "Sau lần đó, bạn có cẩn thận hơn với sức khỏe của mình không?"
+      ]
+    },
+    {
+      id: 3,
+      topic: "Health & Sickness",
+      topicShort: "HEALTH",
+      category: "health",
+      icon: "💪",
+      question: "What do you usually do to stay healthy?",
+      subs: [
+        "Trước đây bạn có quan tâm đến sức khỏe không?",
+        "Hiện tại bạn có thói quen gì để giữ gìn sức khỏe? (ăn uống, tập luyện)",
+        "Những thói quen đó có hiệu quả không?",
+        "Trong tương lai bạn muốn thay đổi hay bổ sung thói quen gì?"
+      ]
+    },
+    {
+      id: 4,
+      topic: "Health & Sickness",
+      topicShort: "HEALTH",
+      category: "health",
+      icon: "🩺",
+      question: "Do you prefer seeing the doctor or treating yourself at home?",
+      subs: [
+        "Trước đây khi bị ốm bạn thường làm gì?",
+        "Thời điểm gặp bác sĩ lần cuối là khi nào? Bạn gặp vấn đề gì?",
+        "Trải nghiệm đi khám bác sĩ của bạn thế nào? Bác sĩ đã làm gì cho bạn?",
+        "Bạn thích tự chữa ở nhà hay đến bác sĩ hơn? Tại sao?"
+      ]
+    },
+    {
+      id: 5,
+      topic: "Health & Sickness",
+      topicShort: "HEALTH",
+      category: "health",
+      icon: "🦠",
+      question: "What are the common sicknesses among young people?",
+      subs: [
+        "Theo bạn, giới trẻ ngày nay hay mắc bệnh gì nhất?",
+        "Bạn hoặc bạn bè của bạn đã từng mắc những bệnh đó chưa?",
+        "Nguyên nhân chính khiến giới trẻ hay bị ốm là gì?",
+        "Bạn nghĩ cần làm gì để giảm tình trạng này trong tương lai?"
+      ]
+    },
+    {
+      id: 6,
+      topic: "Sports & Injuries",
+      topicShort: "SPORTS",
+      category: "sports",
+      icon: "⚽",
+      question: "How often do you play sports?",
+      subs: [
+        "Tần suất chơi thể thao của bạn trước đây? Lý do?",
+        "Tần suất chơi thể thao của bạn hiện tại? Lý do?",
+        "Mong muốn của bạn trong tương lai? (môn thể thao mới, tần suất khác)",
+        "Bạn thích chơi thể thao một mình hay với bạn bè? Tại sao?"
+      ]
+    },
+    {
+      id: 7,
+      topic: "Sports & Injuries",
+      topicShort: "SPORTS",
+      category: "sports",
+      icon: "🎾",
+      question: "What sports do you like to do in your free time?",
+      subs: [
+        "Hồi nhỏ bạn thích chơi môn thể thao nào?",
+        "Tại sao bạn thích môn đó? Kỷ niệm đáng nhớ nhất khi chơi môn đó là gì?",
+        "Hiện tại bạn có còn chơi môn đó không? Nếu không, tại sao?",
+        "Bạn có muốn thử một môn thể thao mới trong tương lai không? Môn gì?"
+      ]
+    },
+    {
+      id: 8,
+      topic: "Sports & Injuries",
+      topicShort: "SPORTS",
+      category: "sports",
+      icon: "🏟️",
+      question: "When was the last time you played sports?",
+      subs: [
+        "Thời điểm gần nhất bạn chơi thể thao? Đó là môn gì? Chơi với ai?",
+        "Bạn đã chơi ở đâu? Trải nghiệm đó thế nào?",
+        "Bạn có gặp chấn thương hay sự cố gì trong lúc chơi không?",
+        "Bạn có dự định chơi lại môn đó trong thời gian tới không?"
+      ]
+    },
+    {
+      id: 9,
+      topic: "Sports & Injuries",
+      topicShort: "SPORTS",
+      category: "sports",
+      icon: "🤕",
+      question: "Have you ever had a sports injury?",
+      subs: [
+        "Bạn đã từng bị chấn thương khi chơi thể thao chưa?",
+        "Thời điểm gặp bác sĩ lần cuối vì chấn thương là khi nào? Bạn gặp vấn đề gì?",
+        "Trải nghiệm điều trị chấn thương của bạn thế nào? Bác sĩ đã làm gì cho bạn?",
+        "Bạn có thay đổi gì trong cách chơi thể thao sau chấn thương đó không?"
+      ]
+    },
+    {
+      id: 10,
+      topic: "Sports & Injuries",
+      topicShort: "SPORTS",
+      category: "sports",
+      icon: "😤",
+      question: "What don't you like about playing sports?",
+      subs: [
+        "Bạn có ghét điều gì khi chơi thể thao không?",
+        "Bạn đã từng có trải nghiệm tệ với thể thao chưa? Chuyện gì đã xảy ra?",
+        "Điều đó có làm bạn muốn ngừng chơi thể thao không?",
+        "Bạn nghĩ làm thế nào để tránh những điều không thích đó?"
+      ]
+    },
+    {
+      id: 11,
+      topic: "Internet & Online Communication",
+      topicShort: "INTERNET",
+      category: "internet",
+      icon: "🌐",
+      question: "What do you like most about using the Internet?",
+      subs: [
+        "Lần đầu tiên bạn sử dụng Internet là khi nào? Bạn dùng để làm gì?",
+        "Hiện tại, bạn dành bao nhiêu thời gian online mỗi ngày?",
+        "Bạn thích làm gì nhất khi online? (chơi game, mạng xã hội, học tập, mua sắm)",
+        "Có điều gì bạn không thích hoặc thấy phiền khi dùng Internet không?"
+      ]
+    },
+    {
+      id: 12,
+      topic: "Internet & Online Communication",
+      topicShort: "INTERNET",
+      category: "internet",
+      icon: "💬",
+      question: "How do you usually communicate with your friends?",
+      subs: [
+        "Hồi nhỏ bạn giao tiếp với bạn bè như thế nào? (gặp trực tiếp, gọi điện?)",
+        "Hiện tại bạn thường dùng cách gì để nói chuyện với bạn bè? (nhắn tin, gọi video, gặp mặt?)",
+        "Tại sao bạn thích cách đó hơn?",
+        "Theo bạn, cách giao tiếp sẽ thay đổi thế nào trong tương lai?"
+      ]
+    },
+    {
+      id: 13,
+      topic: "Internet & Online Communication",
+      topicShort: "INTERNET",
+      category: "internet",
+      icon: "🇻🇳",
+      question: "Is online communication popular in your country?",
+      subs: [
+        "Trước đây người Việt giao tiếp với nhau chủ yếu bằng cách gì?",
+        "Hiện tại, online communication có phổ biến ở Việt Nam không? Ví dụ?",
+        "Nhóm tuổi nào dùng online communication nhiều nhất?",
+        "Bạn nghĩ xu hướng này sẽ tiếp tục tăng hay giảm trong tương lai?"
+      ]
+    },
+    {
+      id: 14,
+      topic: "Internet & Online Communication",
+      topicShort: "INTERNET",
+      category: "internet",
+      icon: "🤝",
+      question: "Do you prefer talking face-to-face or chatting online?",
+      subs: [
+        "Trước đây bạn có hay gặp mặt trực tiếp bạn bè không?",
+        "Hiện tại bạn thấy gặp mặt trực tiếp hay nhắn tin online tiện hơn?",
+        "Trải nghiệm gặp mặt bạn bè gần nhất là khi nào? Bạn làm gì cùng nhau?",
+        "Bạn có nghĩ mình sẽ thay đổi thói quen giao tiếp trong tương lai không?"
+      ]
+    },
+    {
+      id: 15,
+      topic: "Internet & Online Communication",
+      topicShort: "INTERNET",
+      category: "internet",
+      icon: "⚖️",
+      question: "Is the Internet a positive or negative development?",
+      subs: [
+        "Theo bạn, Internet đã thay đổi cuộc sống của bạn như thế nào?",
+        "Bạn có trải nghiệm tiêu cực nào với Internet không? (bị lừa đảo, nghiện mạng?)",
+        "Mặt tích cực lớn nhất và mặt tiêu cực lớn nhất của Internet là gì?",
+        "Bạn nghĩ làm thế nào để sử dụng Internet một cách khôn ngoan?"
+      ]
+    },
+    {
+      id: 16,
+      topic: "Science & Education",
+      topicShort: "SCIENCE",
+      category: "science",
+      icon: "🔬",
+      question: "Why do some people like science?",
+      subs: [
+        "Theo bạn, tại sao có những người rất thích khoa học?",
+        "Bạn có thích môn khoa học không? Từ khi nào?",
+        "Hồi nhỏ bạn có được tiếp xúc với khoa học không? Bằng cách nào?",
+        "Bạn nghĩ làm thế nào để khuyến khích trẻ em yêu thích khoa học hơn?"
+      ]
+    },
+    {
+      id: 17,
+      topic: "Science & Education",
+      topicShort: "SCIENCE",
+      category: "science",
+      icon: "📐",
+      question: "When was the first time you learned a science subject?",
+      subs: [
+        "Môn khoa học đầu tiên bạn được học là môn gì? Học khi nào?",
+        "Bạn học môn đó ở đâu? Ai dạy bạn?",
+        "Trải nghiệm học môn đó như thế nào? (thích hay ghét? dễ hay khó?)",
+        "Bây giờ bạn có còn quan tâm đến môn đó không?"
+      ]
+    },
+    {
+      id: 18,
+      topic: "Science & Education",
+      topicShort: "SCIENCE",
+      category: "science",
+      icon: "🏫",
+      question: "Did you enjoy science at school?",
+      subs: [
+        "Ở trường, bạn có thích các môn khoa học (Toán, Lý, Hóa, Sinh) không?",
+        "Môn nào bạn thích nhất? Môn nào bạn ghét nhất? Tại sao?",
+        "Điểm số của bạn các môn khoa học có tốt không?",
+        "Nếu có thể quay lại, bạn có muốn học các môn khoa học khác đi không?"
+      ]
+    },
+    {
+      id: 19,
+      topic: "Science & Education",
+      topicShort: "SCIENCE",
+      category: "science",
+      icon: "👩‍🔬",
+      question: "Is learning science suitable for both boys and girls?",
+      subs: [
+        "Bạn có nghĩ con trai và con gái đều có thể học tốt khoa học không?",
+        "Trong lớp bạn ngày xưa, con trai hay con gái học khoa học tốt hơn?",
+        "Bạn có biết ai là nữ giới làm trong lĩnh vực khoa học không?",
+        "Bạn nghĩ có rào cản gì khiến ít bạn nữ theo đuổi khoa học không?"
+      ]
+    },
+    {
+      id: 20,
+      topic: "Science & Education",
+      topicShort: "SCIENCE",
+      category: "science",
+      icon: "📚",
+      question: "What science subject would you like to learn more about?",
+      subs: [
+        "Có môn khoa học nào bạn muốn tìm hiểu thêm không?",
+        "Tại sao bạn chọn môn đó?",
+        "Bạn đã từng thử tự học môn đó chưa? Trải nghiệm thế nào?",
+        "Bạn có dự định học môn đó một cách nghiêm túc trong tương lai không?"
+      ]
+    }
+  ],
+
+  // ═══ Test 2 — 10 câu mẫu (để anh duyệt rồi điều chỉnh) ═══
+  test2: [
+    {
+      id: 1,
+      topic: "Food & Cooking",
+      topicShort: "FOOD",
+      category: "sports",
+      icon: "🍜",
+      question: "What kind of food do you like to eat?",
+      subs: [
+        "Hồi nhỏ bạn thích ăn món gì nhất? Ai nấu cho bạn?",
+        "Hiện tại bạn thích ăn món gì? Bạn có hay ăn ngoài không?",
+        "Bạn có biết nấu món bạn thích không? Nếu có, bạn học nấu từ ai?",
+        "Trong tương lai bạn muốn thử món ăn của nước nào? Tại sao?"
+      ]
+    },
+    {
+      id: 2,
+      topic: "Food & Cooking",
+      topicShort: "FOOD",
+      category: "sports",
+      icon: "🍳",
+      question: "How often do you cook at home?",
+      subs: [
+        "Trước đây bạn có hay vào bếp không? Ai là người nấu ăn chính trong nhà?",
+        "Hiện tại bạn nấu ăn bao nhiêu lần một tuần? Bạn thường nấu món gì?",
+        "Bạn thấy nấu ăn ở nhà tiện hơn hay ăn ngoài tiện hơn? Tại sao?",
+        "Bạn có muốn học nấu thêm món mới trong tương lai không?"
+      ]
+    },
+    {
+      id: 3,
+      topic: "Food & Cooking",
+      topicShort: "FOOD",
+      category: "sports",
+      icon: "🥗",
+      question: "Do you think you have a healthy diet?",
+      subs: [
+        "Hồi nhỏ bạn ăn uống có lành mạnh không?",
+        "Hiện tại chế độ ăn của bạn như thế nào? Có nhiều rau và trái cây không?",
+        "Bạn có hay ăn đồ ăn nhanh (fast food) không? Bao lâu một lần?",
+        "Bạn có dự định thay đổi chế độ ăn trong tương lai không? Thay đổi gì?"
+      ]
+    },
+    {
+      id: 4,
+      topic: "Food & Cooking",
+      topicShort: "FOOD",
+      category: "sports",
+      icon: "☕",
+      question: "What do you usually eat for breakfast?",
+      subs: [
+        "Hồi nhỏ bạn thường ăn sáng món gì?",
+        "Hiện tại bữa sáng của bạn thường có gì? Bạn ăn ở nhà hay mua ngoài?",
+        "Bạn có nghĩ bữa sáng quan trọng không? Tại sao?",
+        "Bạn có muốn thay đổi thói quen ăn sáng không?"
+      ]
+    },
+    {
+      id: 5,
+      topic: "Food & Cooking",
+      topicShort: "FOOD",
+      category: "sports",
+      icon: "🍕",
+      question: "What is a popular dish in your country?",
+      subs: [
+        "Theo bạn, món ăn nào nổi tiếng nhất Việt Nam?",
+        "Bạn đã ăn món đó chưa? Bạn ăn lần đầu khi nào?",
+        "Người nước ngoài có thích món đó không? Bạn có thấy họ ăn thử chưa?",
+        "Bạn nghĩ món ăn Việt Nam có thể nổi tiếng hơn nữa trên thế giới không?"
+      ]
+    },
+    {
+      id: 6,
+      topic: "Travel & Holidays",
+      topicShort: "TRAVEL",
+      category: "internet",
+      icon: "✈️",
+      question: "Do you like traveling?",
+      subs: [
+        "Hồi nhỏ bạn có hay đi du lịch cùng gia đình không? Đi đâu?",
+        "Hiện tại bạn có thích đi du lịch không? Tần suất thế nào?",
+        "Chuyến đi gần đây nhất của bạn là đi đâu? Bạn đi với ai?",
+        "Bạn muốn đi du lịch ở đâu trong tương lai? Tại sao?"
+      ]
+    },
+    {
+      id: 7,
+      topic: "Travel & Holidays",
+      topicShort: "TRAVEL",
+      category: "internet",
+      icon: "🏖️",
+      question: "What do you like to do on holiday?",
+      subs: [
+        "Hồi nhỏ kỳ nghỉ của bạn thường như thế nào? Bạn làm gì?",
+        "Hiện tại bạn thích làm gì nhất khi đi nghỉ? (tham quan, nghỉ ngơi, mua sắm?)",
+        "Bạn thích đi nghỉ một mình hay với gia đình/bạn bè? Tại sao?",
+        "Kỳ nghỉ lý tưởng của bạn trong tương lai sẽ như thế nào?"
+      ]
+    },
+    {
+      id: 8,
+      topic: "Travel & Holidays",
+      topicShort: "TRAVEL",
+      category: "internet",
+      icon: "🏔️",
+      question: "Do you prefer the beach or the mountains?",
+      subs: [
+        "Hồi nhỏ bạn thích đi biển hay lên núi hơn?",
+        "Hiện tại bạn thấy biển hay núi thú vị hơn? Tại sao?",
+        "Lần gần nhất bạn đi biển hoặc lên núi là khi nào? Trải nghiệm ra sao?",
+        "Bạn có dự định đi biển hoặc núi trong thời gian tới không?"
+      ]
+    },
+    {
+      id: 9,
+      topic: "Travel & Holidays",
+      topicShort: "TRAVEL",
+      category: "internet",
+      icon: "🗺️",
+      question: "How do you usually plan your trips?",
+      subs: [
+        "Trước đây ai là người lên kế hoạch cho chuyến đi của gia đình bạn?",
+        "Hiện tại bạn tự lên kế hoạch hay nhờ người khác? Bạn dùng app/web gì không?",
+        "Kế hoạch của bạn có thường đúng như dự định không? Có gì bất ngờ xảy ra không?",
+        "Bạn có muốn thử kiểu du lịch không lên kế hoạch trước (spontaneous trip) không?"
+      ]
+    },
+    {
+      id: 10,
+      topic: "Travel & Holidays",
+      topicShort: "TRAVEL",
+      category: "internet",
+      icon: "📸",
+      question: "Do you take many photos when you travel?",
+      subs: [
+        "Hồi nhỏ bạn có hay chụp ảnh khi đi chơi không? Ai là người chụp?",
+        "Hiện tại bạn chụp nhiều ảnh khi đi du lịch không? Bạn chụp bằng gì?",
+        "Bạn có hay đăng ảnh du lịch lên mạng xã hội không?",
+        "Bạn nghĩ chụp ảnh có làm giảm trải nghiệm du lịch không?"
+      ]
+    }
+  ]
+};
 
 // ═══════════════════════════════════════
 //  Tick Sound (Web Audio API — no external files)
@@ -792,7 +974,8 @@ function playTick() {
 // ═══════════════════════════════════════
 //  State
 // ═══════════════════════════════════════
-let usedIndices = [];
+let currentTest = 'test1';
+let usedIndices = {};  // keyed by test name: { test1: [], test2: [] }
 let currentQuestion = null;
 
 const PREP_SECONDS = 30;
@@ -831,6 +1014,40 @@ const answerStatus   = document.getElementById('answerStatus');
 const answerStartBtn = document.getElementById('answerStartBtn');
 const answerResetBtn = document.getElementById('answerResetBtn');
 
+// Init usedIndices per test
+usedIndices[currentTest] = [];
+
+// ═══════════════════════════════════════
+//  Switch Test
+// ═══════════════════════════════════════
+function switchTest(testName) {
+  if (currentTest === testName) return;
+
+  // Stop any running timers
+  stopPrep();
+  stopAnswer();
+  resetPrep();
+  resetAnswer();
+
+  currentTest = testName;
+
+  // Init usedIndices for this test if not yet
+  if (!usedIndices[currentTest]) {
+    usedIndices[currentTest] = [];
+  }
+
+  // Update tab UI
+  document.querySelectorAll('.test-tab').forEach(tab => {
+    tab.classList.toggle('active', tab.dataset.test === testName);
+  });
+
+  // Hide card, show placeholder
+  card.classList.remove('visible');
+  placeholder.style.display = '';
+  prepTimerBox.className = 'timer-box';
+  answerTimerBox.className = 'timer-box';
+}
+
 // ═══════════════════════════════════════
 //  Pick Random Question
 // ═══════════════════════════════════════
@@ -841,26 +1058,29 @@ function pickRandom() {
   resetPrep();
   resetAnswer();
 
+  const bank = questionBanks[currentTest];
+  const used = usedIndices[currentTest];
+
   // Reset usedIndices if all questions have been shown
-  if (usedIndices.length >= questions.length) {
-    usedIndices = [];
+  if (used.length >= bank.length) {
+    usedIndices[currentTest] = [];
   }
 
   // Build available pool
   const available = [];
-  for (let i = 0; i < questions.length; i++) {
-    if (!usedIndices.includes(i)) available.push(i);
+  for (let i = 0; i < bank.length; i++) {
+    if (!usedIndices[currentTest].includes(i)) available.push(i);
   }
 
   const idx = available[Math.floor(Math.random() * available.length)];
-  usedIndices.push(idx);
-  currentQuestion = questions[idx];
+  usedIndices[currentTest].push(idx);
+  currentQuestion = bank[idx];
 
   // Render topic badge + icon
   topicIcon.textContent = currentQuestion.icon;
   topicIcon.className = 'topic-icon ' + currentQuestion.category;
   topicBadge.textContent = currentQuestion.topicShort + ' · Unit ' + Math.ceil(currentQuestion.id / 5);
-  questionNumber.textContent = 'Câu hỏi #' + currentQuestion.id + ' / 20';
+  questionNumber.textContent = 'Câu hỏi #' + currentQuestion.id + ' / ' + bank.length;
   questionEl.textContent = currentQuestion.question;
 
   subQuestions.innerHTML = '';
