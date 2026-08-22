@@ -1155,7 +1155,7 @@ function pickRandom() {
   // Render topic badge + icon
   topicIcon.textContent = currentQuestion.icon;
   topicIcon.className = 'topic-icon ' + currentQuestion.category;
-  topicBadge.textContent = currentQuestion.topicShort + ' · Unit ' + Math.ceil(currentQuestion.id / 5);
+  topicBadge.textContent = currentQuestion.topicShort + ' · Unit ' + (Math.ceil(currentQuestion.id / 5) + (currentTest === 'test2' ? 5 : 0));
   questionNumber.textContent = 'Câu hỏi #' + currentQuestion.id + ' / ' + bank.length;
   questionEl.textContent = currentQuestion.question;
 
