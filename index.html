@@ -213,6 +213,9 @@
   .topic-icon.sports  { background: rgba(22, 163, 74, 0.12); }
   .topic-icon.internet { background: rgba(37, 99, 235, 0.12); }
   .topic-icon.science  { background: rgba(147, 51, 234, 0.12); }
+  .topic-icon.art      { background: rgba(219, 8, 41, 0.12); }
+  .topic-icon.theatre  { background: rgba(245, 158, 11, 0.12); }
+  .topic-icon.weather  { background: rgba(37, 99, 235, 0.12); }
 
   .card .topic-badge {
     display: inline-block;
@@ -804,146 +807,219 @@ const questionBanks = {
     }
   ],
 
-  // ═══ Test 2 — 10 câu mẫu (để anh duyệt rồi điều chỉnh) ═══
+  // ═══ Test 2 — 15 câu (Unit 6–8: Art, Theatre, Weather) ═══
   test2: [
+    // ── UNIT 6: A Famous Portrait ──
     {
       id: 1,
-      topic: "Food & Cooking",
-      topicShort: "FOOD",
-      category: "sports",
-      icon: "🍜",
-      question: "What kind of food do you like to eat?",
+      topic: "Art & Painting",
+      topicShort: "ART",
+      category: "art",
+      icon: "🎨",
+      question: "What is your favourite type of painting — a portrait or a landscape painting — and what do you like most about it?",
       subs: [
-        "Hồi nhỏ bạn thích ăn món gì nhất? Ai nấu cho bạn?",
-        "Hiện tại bạn thích ăn món gì? Bạn có hay ăn ngoài không?",
-        "Bạn có biết nấu món bạn thích không? Nếu có, bạn học nấu từ ai?",
-        "Trong tương lai bạn muốn thử món ăn của nước nào? Tại sao?"
+        "Em thích tranh chân dung (portrait) hay tranh phong cảnh (landscape painting) hơn?",
+        "Yếu tố nào khiến bức tranh đó có sức hút lớn (great appeal) với em?",
+        "Chất liệu (ví dụ sơn dầu – oil paint) hay màu sắc có gì đặc biệt khiến em ấn tượng không?",
+        "Cảm xúc của em khi ngắm bức tranh đó như thế nào?"
       ]
     },
     {
       id: 2,
-      topic: "Food & Cooking",
-      topicShort: "FOOD",
-      category: "sports",
-      icon: "🍳",
-      question: "How often do you cook at home?",
+      topic: "Art & Painting",
+      topicShort: "ART",
+      category: "art",
+      icon: "🏛️",
+      question: "Is going to an art museum or art gallery popular among young people in your country?",
       subs: [
-        "Trước đây bạn có hay vào bếp không? Ai là người nấu ăn chính trong nhà?",
-        "Hiện tại bạn nấu ăn bao nhiêu lần một tuần? Bạn thường nấu món gì?",
-        "Bạn thấy nấu ăn ở nhà tiện hơn hay ăn ngoài tiện hơn? Tại sao?",
-        "Bạn có muốn học nấu thêm món mới trong tương lai không?"
+        "Giới trẻ Việt Nam có thường đến bảo tàng nghệ thuật (art museum) hoặc phòng trưng bày (art gallery) không?",
+        "Việc đi xem tranh có tốn kém hay khó sắp xếp thời gian không?",
+        "Việc này có ích lợi gì cho họ không (ví dụ giúp nảy ra ý tưởng mới – come up with new ideas)?",
+        "Hoạt động này thường phù hợp với nhóm người nào hơn?"
       ]
     },
     {
       id: 3,
-      topic: "Food & Cooking",
-      topicShort: "FOOD",
-      category: "sports",
-      icon: "🥗",
-      question: "Do you think you have a healthy diet?",
+      topic: "Art & Painting",
+      topicShort: "ART",
+      category: "art",
+      icon: "🖌️",
+      question: "Do you hope to learn how to paint someday?",
       subs: [
-        "Hồi nhỏ bạn ăn uống có lành mạnh không?",
-        "Hiện tại chế độ ăn của bạn như thế nào? Có nhiều rau và trái cây không?",
-        "Bạn có hay ăn đồ ăn nhanh (fast food) không? Bao lâu một lần?",
-        "Bạn có dự định thay đổi chế độ ăn trong tương lai không? Thay đổi gì?"
+        "Em có muốn học vẽ tranh (learn how to paint) trong tương lai không?",
+        "Giai đoạn đầu làm quen với nét vẽ phác thảo (sketches) và sơn dầu (oil paint), theo em có khó không?",
+        "Em hy vọng sau một thời gian học vẽ, mình có thể vẽ được gì (ví dụ chân dung bạn bè)?",
+        "Em mong chờ điều gì nhất khi hoàn thành bức tranh đầu tiên của mình?"
       ]
     },
     {
       id: 4,
-      topic: "Food & Cooking",
-      topicShort: "FOOD",
-      category: "sports",
-      icon: "☕",
-      question: "What do you usually eat for breakfast?",
+      topic: "Art & Painting",
+      topicShort: "ART",
+      category: "art",
+      icon: "🖼️",
+      question: "What is your favourite famous painting, and what do you like most about it?",
       subs: [
-        "Hồi nhỏ bạn thường ăn sáng món gì?",
-        "Hiện tại bữa sáng của bạn thường có gì? Bạn ăn ở nhà hay mua ngoài?",
-        "Bạn có nghĩ bữa sáng quan trọng không? Tại sao?",
-        "Bạn có muốn thay đổi thói quen ăn sáng không?"
+        "Bức tranh nổi tiếng (famous painting) mà em thích nhất là gì?",
+        "Người nghệ sĩ (artist) đã dùng chất liệu gì để vẽ nó?",
+        "Điều gì ở bức tranh đó khiến nó nổi tiếng hoặc có sức hút lớn (great appeal)?",
+        "Cảm xúc của em khi nhìn thấy nó (dù trực tiếp hay qua ảnh) như thế nào?"
       ]
     },
     {
       id: 5,
-      topic: "Food & Cooking",
-      topicShort: "FOOD",
-      category: "sports",
-      icon: "🍕",
-      question: "What is a popular dish in your country?",
+      topic: "Art & Painting",
+      topicShort: "ART",
+      category: "art",
+      icon: "🎭",
+      question: "Are modern paintings popular among young people in your country?",
       subs: [
-        "Theo bạn, món ăn nào nổi tiếng nhất Việt Nam?",
-        "Bạn đã ăn món đó chưa? Bạn ăn lần đầu khi nào?",
-        "Người nước ngoài có thích món đó không? Bạn có thấy họ ăn thử chưa?",
-        "Bạn nghĩ món ăn Việt Nam có thể nổi tiếng hơn nữa trên thế giới không?"
+        "Giới trẻ Việt Nam có xu hướng thích tranh hiện đại (modern paintings) hơn tranh sơn dầu truyền thống không?",
+        "Vì sao nhóm tuổi này lại thích như vậy (ví dụ giúp nảy ra ý tưởng mới)?",
+        "Người lớn tuổi có xu hướng thích loại tranh nào hơn (ví dụ tranh phong cảnh đồng quê – rural landscape)?",
+        "Sự khác biệt này theo em có gì thú vị?"
       ]
     },
+    // ── UNIT 7: On Stage ──
     {
       id: 6,
-      topic: "Travel & Holidays",
-      topicShort: "TRAVEL",
-      category: "internet",
-      icon: "✈️",
-      question: "Do you like traveling?",
+      topic: "Theatre & Drama",
+      topicShort: "THEATRE",
+      category: "theatre",
+      icon: "🎬",
+      question: "What is your favourite type of play — a tragedy or one with exciting sword fights — and what do you like most about it?",
       subs: [
-        "Hồi nhỏ bạn có hay đi du lịch cùng gia đình không? Đi đâu?",
-        "Hiện tại bạn có thích đi du lịch không? Tần suất thế nào?",
-        "Chuyến đi gần đây nhất của bạn là đi đâu? Bạn đi với ai?",
-        "Bạn muốn đi du lịch ở đâu trong tương lai? Tại sao?"
+        "Em thích xem kịch có nội dung bi kịch (tragedy) hay có cảnh đấu kiếm gay cấn (sword fight) hơn?",
+        "Dàn diễn viên (cast) hay trang phục (costumes) trên sân khấu thu hút em hơn?",
+        "Phân đoạn nào khiến em ấn tượng nhất?",
+        "Cảm xúc của em khi xem xong vở kịch đó như thế nào?"
       ]
     },
     {
       id: 7,
-      topic: "Travel & Holidays",
-      topicShort: "TRAVEL",
-      category: "internet",
-      icon: "🏖️",
-      question: "What do you like to do on holiday?",
+      topic: "Theatre & Drama",
+      topicShort: "THEATRE",
+      category: "theatre",
+      icon: "🎪",
+      question: "Is joining a school drama club to perform plays popular among students in your country?",
       subs: [
-        "Hồi nhỏ kỳ nghỉ của bạn thường như thế nào? Bạn làm gì?",
-        "Hiện tại bạn thích làm gì nhất khi đi nghỉ? (tham quan, nghỉ ngơi, mua sắm?)",
-        "Bạn thích đi nghỉ một mình hay với gia đình/bạn bè? Tại sao?",
-        "Kỳ nghỉ lý tưởng của bạn trong tương lai sẽ như thế nào?"
+        "Học sinh ở trường em có thường tham gia câu lạc bộ kịch (drama club) không?",
+        "Việc chuẩn bị trang phục (costumes) và tập luyện có tốn nhiều thời gian không?",
+        "Có khó để học cách diễn xuất và kiểm soát cảm xúc lẫn lộn (mixed emotions) trên sân khấu không?",
+        "Hoạt động này thường thu hút những bạn học sinh như thế nào?"
       ]
     },
     {
       id: 8,
-      topic: "Travel & Holidays",
-      topicShort: "TRAVEL",
-      category: "internet",
-      icon: "🏔️",
-      question: "Do you prefer the beach or the mountains?",
+      topic: "Theatre & Drama",
+      topicShort: "THEATRE",
+      category: "theatre",
+      icon: "🎟️",
+      question: "Do you hope to try acting on stage someday?",
       subs: [
-        "Hồi nhỏ bạn thích đi biển hay lên núi hơn?",
-        "Hiện tại bạn thấy biển hay núi thú vị hơn? Tại sao?",
-        "Lần gần nhất bạn đi biển hoặc lên núi là khi nào? Trải nghiệm ra sao?",
-        "Bạn có dự định đi biển hoặc núi trong thời gian tới không?"
+        "Em có muốn thử sức diễn xuất trên sân khấu (go on stage) không?",
+        "Em muốn đóng một nhân vật hài hước (comic character) hay một nhân vật trong bi kịch (tragedy)?",
+        "Em nghĩ mình cần luyện tập gì để có một màn trình diễn tốt (put on a good performance)?",
+        "Em hy vọng điều gì nếu ước mơ đó trở thành hiện thực (dream comes true)?"
       ]
     },
     {
       id: 9,
-      topic: "Travel & Holidays",
-      topicShort: "TRAVEL",
-      category: "internet",
-      icon: "🗺️",
-      question: "How do you usually plan your trips?",
+      topic: "Theatre & Drama",
+      topicShort: "THEATRE",
+      category: "theatre",
+      icon: "😄",
+      question: "Which do you enjoy watching more — a play full of mixed emotions or one with a comic character — and what do you like most about it?",
       subs: [
-        "Trước đây ai là người lên kế hoạch cho chuyến đi của gia đình bạn?",
-        "Hiện tại bạn tự lên kế hoạch hay nhờ người khác? Bạn dùng app/web gì không?",
-        "Kế hoạch của bạn có thường đúng như dự định không? Có gì bất ngờ xảy ra không?",
-        "Bạn có muốn thử kiểu du lịch không lên kế hoạch trước (spontaneous trip) không?"
+        "Em thích xem một vở kịch có nhiều cảm xúc lẫn lộn (mixed emotions) hay một vở có nhân vật hài hước (comic character) hơn?",
+        "Dàn diễn viên (cast) đã thể hiện điều đó qua trang phục hay diễn xuất như thế nào?",
+        "Có phân đoạn nào khiến em nhớ mãi không?",
+        "Cảm xúc của em sau khi xem xong là gì?"
       ]
     },
     {
       id: 10,
-      topic: "Travel & Holidays",
-      topicShort: "TRAVEL",
-      category: "internet",
-      icon: "📸",
-      question: "Do you take many photos when you travel?",
+      topic: "Theatre & Drama",
+      topicShort: "THEATRE",
+      category: "theatre",
+      icon: "🏛️",
+      question: "Is it popular for teenagers in your country to watch a live play at the theatre?",
       subs: [
-        "Hồi nhỏ bạn có hay chụp ảnh khi đi chơi không? Ai là người chụp?",
-        "Hiện tại bạn chụp nhiều ảnh khi đi du lịch không? Bạn chụp bằng gì?",
-        "Bạn có hay đăng ảnh du lịch lên mạng xã hội không?",
-        "Bạn nghĩ chụp ảnh có làm giảm trải nghiệm du lịch không?"
+        "Giới trẻ Việt Nam có thường đi xem kịch trực tiếp tại nhà hát không?",
+        "Vé xem kịch có đắt hay khó mua không?",
+        "Loại kịch nào (bi kịch, có nhân vật hài hước) được yêu thích hơn?",
+        "Hoạt động này thường phù hợp với đối tượng nào?"
+      ]
+    },
+    // ── UNIT 8: Weather Forecast ──
+    {
+      id: 11,
+      topic: "Weather & Camping",
+      topicShort: "WEATHER",
+      category: "weather",
+      icon: "☀️",
+      question: "What is your favourite type of weather, and what do you like most about it?",
+      subs: [
+        "Em thích thời tiết nắng ráo, trời trong xanh (clear skies) hay mát mẻ có mưa nhẹ hơn?",
+        "Vào loại thời tiết đó em thường làm gì?",
+        "Nhiệt độ (temperature) như thế nào thì em cảm thấy dễ chịu nhất?",
+        "Cảm giác của em vào những ngày thời tiết đẹp (fine weather) đó là gì?"
+      ]
+    },
+    {
+      id: 12,
+      topic: "Weather & Camping",
+      topicShort: "WEATHER",
+      category: "weather",
+      icon: "🌤️",
+      question: "Is checking the weather forecast before making plans popular among people in your country?",
+      subs: [
+        "Mọi người xung quanh em có thường xem dự báo thời tiết (weather forecast) trước khi lên kế hoạch không?",
+        "Việc đó có giúp họ lên kế hoạch trước (plan ahead) dễ dàng hơn không?",
+        "Có phải ai cũng cẩn thận (cautious) như vậy không, hay có người vẫn đi bất kể thời tiết (no matter how the weather is)?",
+        "Thói quen này phổ biến với nhóm người nào hơn?"
+      ]
+    },
+    {
+      id: 13,
+      topic: "Weather & Camping",
+      topicShort: "WEATHER",
+      category: "weather",
+      icon: "🏕️",
+      question: "What do you hope the weather will be like the next time you go camping?",
+      subs: [
+        "Em hy vọng trời sẽ nắng đẹp, trời trong xanh (clear skies) hay mát mẻ hơn?",
+        "Em có định xem dự báo thời tiết (check the weather forecast) trước khi đi không?",
+        "Nếu trời có mưa rào bất chợt (occasional showers), em sẽ chuẩn bị gì để không phải hủy chuyến đi (cancel the trip)?",
+        "Em mong chờ (look forward to) điều gì nhất trong chuyến cắm trại đó?"
+      ]
+    },
+    {
+      id: 14,
+      topic: "Weather & Camping",
+      topicShort: "WEATHER",
+      category: "weather",
+      icon: "🌸",
+      question: "What season do you enjoy the most, and what do you like most about the weather during that season?",
+      subs: [
+        "Em thích mùa nào nhất trong năm: mùa mưa hay mùa nắng?",
+        "Thời tiết vào mùa đó có gì đặc biệt (ví dụ trời trong xanh, hay có mưa rào bất chợt)?",
+        "Em thường làm gì vào mùa đó?",
+        "Cảm xúc của em vào mùa đó như thế nào?"
+      ]
+    },
+    {
+      id: 15,
+      topic: "Weather & Camping",
+      topicShort: "WEATHER",
+      category: "weather",
+      icon: "⛺",
+      question: "Is buying camping gear such as a tent or a camping stove popular among young people in your country?",
+      subs: [
+        "Giới trẻ có thường mua sắm đồ cắm trại như lều hay bếp cắm trại (camping stove) không?",
+        "Những món đồ đó có đắt hay khó tìm mua không?",
+        "Việc chuẩn bị đồ đạc (get one's stuff ready) thường mất bao lâu?",
+        "Hoạt động mua sắm này phổ biến với nhóm người nào?"
       ]
     }
   ]

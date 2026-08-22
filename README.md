@@ -1,6 +1,6 @@
 # Speaking Test Timer
 
-Static webpage for IELTS Foundation speaking practice — Course 34. Randomly displays one of 20 questions with two countdown timers.
+Static webpage for IELTS Foundation speaking practice — Course 34. Randomly displays one of 35 questions with two countdown timers.
 
 ## How to use
 
@@ -20,7 +20,13 @@ Static webpage for IELTS Foundation speaking practice — Course 34. Randomly di
 
 ## Topics
 
+**Test 1 (Units 1–4):** 20 questions
 1. Health & Sickness (Unit 1)
 2. Sports & Injuries (Unit 2)
 3. Internet & Online Communication (Unit 3)
 4. Science & Education (Unit 4)
+
+**Test 2 (Units 5–8):** 15 questions
+5. Art & Painting (Unit 6 — A Famous Portrait)
+6. Theatre & Drama (Unit 7 — On Stage)
+7. Weather & Camping (Unit 8 — Weather Forecast)
