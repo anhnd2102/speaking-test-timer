@@ -1026,3 +1026,160 @@ function pickRandom() {
   topicIcon.textContent = currentQuestion.icon;
   topicIcon.className = 'topic-icon ' + currentQuestion.category;
   topicBadge.textContent = currentQuestion.topicShort + ' · Unit ' + (currentQuestion.unit ?? (Math.ceil(currentQuestion.id / 5) + (currentTest === 'test2' ? 5 : 0)));
+  questionNumber.textContent = 'Câu hỏi #' + currentQuestion.id + ' / ' + bank.length;
+  questionEl.textContent = currentQuestion.question;
+
+  subQuestions.innerHTML = '';
+  currentQuestion.subs.forEach(s => {
+    const li = document.createElement('li');
+    li.innerHTML = '<span class="bullet">▸</span><span>' + s + '</span>';
+    subQuestions.appendChild(li);
+  });
+
+  // Show card, hide placeholder
+  placeholder.style.display = 'none';
+  card.classList.add('visible');
+
+  // Reset timer states
+  prepTimerBox.className = 'timer-box';
+  answerTimerBox.className = 'timer-box';
+}
+
+// ═══════════════════════════════════════
+//  Preparation Timer
+// ═══════════════════════════════════════
+function startPrep() {
+  if (prepRunning) return;
+  if (answerRunning) stopAnswer();
+
+  prepRunning = true;
+  prepStartBtn.textContent = '⏸ Tạm dừng';
+  prepStartBtn.classList.remove('primary');
+  prepStatus.textContent = 'ĐANG CHUẨN BỊ...';
+
+  prepInterval = setInterval(() => {
+    prepSecondsLeft--;
+    updatePrepDisplay();
+
+    if (prepSecondsLeft <= 0) {
+      stopPrep();
+      prepStatus.textContent = 'HẾT GIỜ!';
+      prepTimerBox.className = 'timer-box done';
+      startAnswer();
+    }
+  }, 1000);
+}
+
+function stopPrep() {
+  if (prepInterval) clearInterval(prepInterval);
+  prepInterval = null;
+  prepRunning = false;
+  prepStartBtn.textContent = 'Bắt đầu';
+  prepStartBtn.classList.add('primary');
+}
+
+function resetPrep() {
+  stopPrep();
+  prepSecondsLeft = PREP_SECONDS;
+  updatePrepDisplay();
+  prepStatus.textContent = 'SẴN SÀNG';
+  prepTimerBox.className = 'timer-box';
+}
+
+function updatePrepDisplay() {
+  const m = Math.floor(Math.max(0, prepSecondsLeft) / 60);
+  const s = Math.max(0, prepSecondsLeft) % 60;
+  prepDisplay.textContent = String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
+
+  prepTimerBox.classList.remove('active', 'warning', 'danger', 'done');
+  if (prepRunning) {
+    prepTimerBox.classList.add('active');
+    if (prepSecondsLeft <= 5) { prepTimerBox.classList.add('danger'); playTick(); }
+    else if (prepSecondsLeft <= 10) { prepTimerBox.classList.add('warning'); playTick(); }
+  }
+}
+
+// ═══════════════════════════════════════
+//  Answer Timer
+// ═══════════════════════════════════════
+function startAnswer() {
+  if (answerRunning) return;
+  if (prepRunning) stopPrep();
+
+  answerRunning = true;
+  answerStartBtn.textContent = '⏸ Tạm dừng';
+  answerStartBtn.classList.remove('primary');
+  answerStatus.textContent = 'ĐANG TRẢ LỜI...';
+
+  answerInterval = setInterval(() => {
+    answerSecondsLeft--;
+    updateAnswerDisplay();
+
+    if (answerSecondsLeft <= 0) {
+      stopAnswer();
+      answerStatus.textContent = 'HẾT GIỜ!';
+      answerTimerBox.className = 'timer-box done';
+    }
+  }, 1000);
+}
+
+function stopAnswer() {
+  if (answerInterval) clearInterval(answerInterval);
+  answerInterval = null;
+  answerRunning = false;
+  answerStartBtn.textContent = 'Bắt đầu';
+  answerStartBtn.classList.add('primary');
+}
+
+function resetAnswer() {
+  stopAnswer();
+  answerSecondsLeft = ANSWER_SECONDS;
+  updateAnswerDisplay();
+  answerStatus.textContent = 'SẴN SÀNG';
+  answerTimerBox.className = 'timer-box';
+}
+
+function updateAnswerDisplay() {
+  const m = Math.floor(Math.max(0, answerSecondsLeft) / 60);
+  const s = Math.max(0, answerSecondsLeft) % 60;
+  answerDisplay.textContent = String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
+
+  answerTimerBox.classList.remove('active', 'warning', 'danger', 'done');
+  if (answerRunning) {
+    answerTimerBox.classList.add('active');
+    if (answerSecondsLeft <= 10) { answerTimerBox.classList.add('danger'); playTick(); }
+    else if (answerSecondsLeft <= 20) { answerTimerBox.classList.add('warning'); playTick(); }
+  }
+}
+
+// ═══════════════════════════════════════
+//  Keyboard shortcuts
+// ═══════════════════════════════════════
+document.addEventListener('keydown', (e) => {
+  if (e.key === ' ' || e.code === 'Space') {
+    e.preventDefault();
+    if (prepRunning) {
+      stopPrep();
+      prepStatus.textContent = 'TẠM DỪNG';
+    } else if (!answerRunning) {
+      startPrep();
+    }
+  }
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    if (answerRunning) {
+      stopAnswer();
+      answerStatus.textContent = 'TẠM DỪNG';
+    } else {
+      startAnswer();
+    }
+  }
+  if (e.key === 'r' || e.key === 'R') {
+    e.preventDefault();
+    pickRandom();
+  }
+});
+</script>
+
+</body>
+</html>
